@@ -58,11 +58,13 @@ function GameDetailPage() {
       </p>
 
       <p>
-        <span className="font-semibold">Rating:</span> {displayGame.rating}
+        <span className="font-semibold">Rating:</span> {displayGame.rating}{" "}
+        {displayGame.rating >= 4 ? "🔥" : displayGame.rating >= 2 ? "👍" : "😬"}
       </p>
 
       <p>
-        <span className="font-semibold">Play time:</span> {displayGame.playtime}
+        <span className="font-semibold">Play time:</span>{" "}
+        {Math.ceil(displayGame.playtime)} hrs
       </p>
     </div>
   );

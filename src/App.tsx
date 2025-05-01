@@ -1,22 +1,27 @@
-import HomePage from "./pages/HomePage";
-import GameDetailPage from "./pages/GameDetailPage";
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import { GameProvider } from "./context/GameContext";
-import AddGamePage from "./pages/AddGamePage";
+
+import { lazy, Suspense } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const GameDetailPage = lazy(() => import("./pages/GameDetailPage"));
+const AddGamePage = lazy(() => import("./pages/AddGamePage"));
 
 function App() {
   return (
     <GameProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="" element={<HomePage />} />
-            <Route path="game/:id" element={<GameDetailPage />} />
-            <Route path="/add" element={<AddGamePage />} />
-          </Route>
-        </Routes>
+        <Suspense fallback={<p className="text-center mt-20">Loading...</p>}>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="game/:id" element={<GameDetailPage />} />
+              <Route path="add" element={<AddGamePage />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </GameProvider>
   );
