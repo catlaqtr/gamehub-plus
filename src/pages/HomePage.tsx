@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import GameCard from "../components/GameCard";
+import { useGameContext } from "../context/GameContext";
+import { useLocation } from "react-router-dom";
 
 function HomePage() {
-  type Game = {
-    id: number;
-    title: string;
-    image: string;
-    genre: string;
-  };
   type RawgGame = {
     id: number;
     name: string;
@@ -15,7 +11,10 @@ function HomePage() {
     genres: { name: string }[];
   };
 
-  const [games, setGames] = useState<Game[]>([]);
+  const { state, dispatch } = useGameContext();
+  const location = useLocation();
+  const success = location.state?.success;
+  const [showSuccess, setShowSuccess] = useState(success);
 
   useEffect(() => {
     fetch("https://api.rawg.io/api/games?key=04cbcf506c184af89dd6151c7632497b")
@@ -27,15 +26,29 @@ function HomePage() {
           image: game.background_image,
           genre: game.genres[0]?.name ?? "Unknown",
         }));
-        setGames(result);
+        dispatch({ type: "SET_GAMES", payload: result });
       });
-  }, []);
+  }, [dispatch]);
+  useEffect(() => {
+    if (success) {
+      const timeout = setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [success]);
 
   return (
     <div>
       <div>Home Page</div>
+      {showSuccess && (
+        <p className="text-green-600 font-semibold mb-4">
+          Game added successfully!
+        </p>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {games.map((game) => {
+        {state.map((game) => {
           return (
             <GameCard
               id={game.id}
