@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useGameContext } from "../context/GameContext";
 import { useNavigate } from "react-router-dom";
+import { useId } from "react";
 
 function AddGamePage() {
   type FormData = {
@@ -43,15 +44,20 @@ function AddGamePage() {
     }, 1500);
   };
 
+  const titleId = useId();
+
   return (
-    <div>
-      <h1>Add Game</h1>
+    <div className="dark:bg-gray-900 dark:text-white">
+      <h1 className="text-2xl font-bold">Add Game</h1>
       <div className="max-w-xl mx-auto p-6">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
-            <label className="block font-medium">Title</label>
+            <label htmlFor={titleId} className="block font-medium">
+              Title
+            </label>
             <input
-              className="border w-full p-2"
+              id={titleId}
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
               {...register("title", { required: "Title is required" })}
             />
@@ -63,7 +69,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Image URL</label>
             <input
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
               {...register("image", {
                 required: "Image URL is required",
@@ -81,7 +87,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Genre</label>
             <input
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
               {...register("genre", { required: "Genre is required" })}
             />
@@ -93,7 +99,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Description</label>
             <textarea
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               {...register("description", {
                 required: "Description is required",
               })}
@@ -108,7 +114,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Released Date</label>
             <input
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="date"
               {...register("released", {
                 required: "Release date is required",
@@ -122,7 +128,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Rating</label>
             <input
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="number"
               {...register("rating", {
                 required: "Rating is required",
@@ -144,7 +150,7 @@ function AddGamePage() {
           <div className="mb-4">
             <label className="block font-medium">Playtime (in hours)</label>
             <input
-              className="border w-full p-2"
+              className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="number"
               {...register("playtime", {
                 required: "Playtime is required",
@@ -161,7 +167,7 @@ function AddGamePage() {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition dark:bg-blue-800 dark:hover:bg-blue-600"
           >
             Add Game
           </button>

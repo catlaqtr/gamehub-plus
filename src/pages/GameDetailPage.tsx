@@ -38,9 +38,9 @@ function GameDetailPage() {
   if (!displayGame) return <p>Loading...</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
+    <div className="max-w-2xl mx-auto p-4 space-y-4 dark:bg-gray-900 dark:text-white">
       <Link
-        className="inline-block mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        className="inline-block mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition dark:bg-blue-700 dark:hover:bg-blue-600"
         to="/"
       >
         ← Back to Home
@@ -51,8 +51,11 @@ function GameDetailPage() {
         alt={displayGame.title}
       />
       <h2 className="text-3xl font-bold">{displayGame.title}</h2>
-      <p className="text-sm text-gray-600 italic">{displayGame.genre}</p>
+      <p className="text-sm text-gray-600 italic dark:text-gray-400">
+        {displayGame.genre}
+      </p>
       <p>{displayGame.description}</p>
+
       <p>
         <span className="font-semibold">Released:</span> {displayGame.released}
       </p>
@@ -69,4 +72,5 @@ function GameDetailPage() {
     </div>
   );
 }
+
 export default GameDetailPage;

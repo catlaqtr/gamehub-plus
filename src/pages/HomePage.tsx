@@ -87,10 +87,10 @@ function HomePage() {
   }, []);
 
   return (
-    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-900 dark:text-white">
       <div>Home Page</div>
       {showSuccess && (
-        <p className="text-green-600 font-semibold mb-4">
+        <p className="text-green-600 font-semibold mb-4 dark:text-green-400">
           Game added successfully!
         </p>
       )}
@@ -102,12 +102,13 @@ function HomePage() {
         step={10}
         value={filterState.playtime}
         onChange={handlePlaytimeChange}
+        className="dark:bg-gray-700 dark:focus:ring-blue-500"
       />
 
-      <p className="mb-2 font-medium">
+      <p className="mb-2 font-medium dark:text-gray-200">
         Showing games under {filterState.playtime} hours of playtime
       </p>
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-600 dark:text-gray-400">
         You've adjusted the filter {playTimeChangeCount.current} times
       </p>
 
