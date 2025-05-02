@@ -1,23 +1,4 @@
 import { createContext, useReducer, useContext, ReactNode } from "react";
-type GameContextType = {
-  state: Game[];
-  dispatch: React.Dispatch<GameAction>;
-};
-const GameContext = createContext<GameContextType | undefined>(undefined);
-
-type GameProviderProps = {
-  children: ReactNode;
-};
-
-export function GameProvider({ children }: GameProviderProps) {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
-
-  return (
-    <GameContext.Provider value={{ state, dispatch }}>
-      {children}
-    </GameContext.Provider>
-  );
-}
 
 type Game = {
   id: number;
@@ -29,22 +10,52 @@ type Game = {
   rating: number;
   playtime: number;
 };
+
+type GameState = {
+  games: Game[];
+  isLoading: boolean;
+};
+
 type GameAction =
   | { type: "SET_GAMES"; payload: Game[] }
-  | { type: "ADD_GAME"; payload: Game };
+  | { type: "ADD_GAME"; payload: Game }
+  | { type: "SET_LOADING"; payload: boolean };
 
-const initialState: Game[] = [];
+const initialState: GameState = {
+  games: [],
+  isLoading: true,
+};
 
-function gameReducer(state: Game[], action: GameAction): Game[] {
+function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "SET_GAMES":
-      return action.payload;
+      return { ...state, games: action.payload, isLoading: false };
     case "ADD_GAME":
-      return [...state, action.payload];
+      return { ...state, games: [...state.games, action.payload] };
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload };
     default:
       return state;
   }
 }
+
+type GameContextType = {
+  state: GameState;
+  dispatch: React.Dispatch<GameAction>;
+};
+
+const GameContext = createContext<GameContextType | undefined>(undefined);
+
+export function GameProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(gameReducer, initialState);
+
+  return (
+    <GameContext.Provider value={{ state, dispatch }}>
+      {children}
+    </GameContext.Provider>
+  );
+}
+
 export function useGameContext() {
   const context = useContext(GameContext);
   if (!context) {
@@ -52,4 +63,5 @@ export function useGameContext() {
   }
   return context;
 }
+
 export type { Game };

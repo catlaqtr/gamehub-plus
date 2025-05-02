@@ -8,7 +8,7 @@ function GameDetailPage() {
   const params = useParams();
   const gameId = Number(params.id);
   const { state } = useGameContext();
-  const game = state.find((g) => g.id === gameId);
+  const game = state.games.find((g) => g.id === gameId);
 
   const [fullGame, setFullGame] = useState<Game | null>(null);
   const displayGame = fullGame || game;

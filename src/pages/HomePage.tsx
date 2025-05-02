@@ -1,45 +1,58 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import {
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  useState,
+  useReducer,
+} from "react";
 import GameCard from "../components/GameCard";
 import { useGameContext } from "../context/GameContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
+import useFetchGames from "../hooks/useFetchGames";
+import Spinner from "../components/Spinner";
+import Modal from "../components/Modal";
+
+// ✅ reducer and types go here (moved to the top)
+type FilterState = {
+  playtime: number;
+};
+
+type FilterAction = {
+  type: "SET_PLAYTIME";
+  payload: number;
+};
+
+function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  switch (action.type) {
+    case "SET_PLAYTIME":
+      return { ...state, playtime: action.payload };
+    default:
+      return state;
+  }
+}
 
 function HomePage() {
-  type RawgGame = {
-    id: number;
-    name: string;
-    background_image: string;
-    genres: { name: string }[];
-  };
-
-  const { state, dispatch } = useGameContext();
+  const {
+    state: { games, isLoading },
+  } = useGameContext();
   const location = useLocation();
   const success = location.state?.success;
-  const [showSuccess, setShowSuccess] = useState(success);
-  const [playTime, setPlayTime] = useState<number>(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filterState, dispatchFilter] = useReducer(filterReducer, {
+    playtime: Number(searchParams.get("playtime") || 0),
+  });
+
   const playTimeChangeCount = useRef(0);
-  const handlePlaytimeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      playTimeChangeCount.current += 1;
-      setPlayTime(Number(e.target.value));
-    },
-    []
+  const [showSuccess, setShowSuccess] = useState(success);
+
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+    null
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetch("https://api.rawg.io/api/games?key=04cbcf506c184af89dd6151c7632497b")
-      .then((res) => res.json())
-      .then((data) => {
-        const result = data.results.map((game: RawgGame) => ({
-          id: game.id,
-          title: game.name,
-          image: game.background_image,
-          genre: game.genres[0]?.name ?? "Unknown",
-          playtime: Math.floor(Math.random() * 100),
-        }));
+  useFetchGames();
 
-        dispatch({ type: "SET_GAMES", payload: result });
-      });
-  }, [dispatch]);
   useEffect(() => {
     if (success) {
       const timeout = setTimeout(() => {
@@ -48,47 +61,77 @@ function HomePage() {
       return () => clearTimeout(timeout);
     }
   }, [success]);
-  const filteredGames = useMemo(() => {
-    return state.filter(
-      (game) => game.playtime === undefined || game.playtime <= playTime
-    );
-  }, [state, playTime]);
+
+  const filteredGames = useMemo(
+    () =>
+      games.filter(
+        (game) =>
+          game.playtime === undefined || game.playtime <= filterState.playtime
+      ),
+    [games, filterState.playtime]
+  );
+
+  const handlePlaytimeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = Number(e.target.value);
+      playTimeChangeCount.current += 1;
+      setSearchParams({ playtime: value.toString() });
+      dispatchFilter({ type: "SET_PLAYTIME", payload: value });
+    },
+    [setSearchParams]
+  );
+
+  const handleViewDescription = useCallback((description: string) => {
+    setModalContent(<p>{description}</p>);
+    setIsModalOpen(true);
+  }, []);
+
   return (
-    <div>
+    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8">
       <div>Home Page</div>
       {showSuccess && (
         <p className="text-green-600 font-semibold mb-4">
           Game added successfully!
         </p>
       )}
+
       <input
         type="range"
         min={0}
         max={300}
         step={10}
-        value={playTime}
+        value={filterState.playtime}
         onChange={handlePlaytimeChange}
       />
 
       <p className="mb-2 font-medium">
-        Showing games under {playTime} hours of playtime
+        Showing games under {filterState.playtime} hours of playtime
       </p>
       <p className="text-sm text-gray-600">
         You've adjusted the filter {playTimeChangeCount.current} times
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {filteredGames.map((game) => (
-          <GameCard
-            id={game.id}
-            title={game.title}
-            image={game.image}
-            genre={game.genre}
-            key={game.id}
-          />
-        ))}
-      </div>
-    </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {filteredGames.map((game) => (
+            <GameCard
+              key={game.id}
+              {...game}
+              onViewDescription={() => handleViewDescription(game.description)}
+            />
+          ))}
+        </div>
+      )}
+
+      {isModalOpen && modalContent && (
+        <Modal onClose={() => setIsModalOpen(false)} title="Game Description">
+          {modalContent}
+        </Modal>
+      )}
+    </section>
   );
 }
+
 export default HomePage;
