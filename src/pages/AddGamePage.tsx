@@ -52,122 +52,91 @@ function AddGamePage() {
       <div className="max-w-xl mx-auto p-6">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
-            <label htmlFor={titleId} className="block font-medium">
-              Title
-            </label>
             <input
               id={titleId}
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
-              {...register("title", { required: "Title is required" })}
+              placeholder="Title"
+              {...register("title", { required: true })}
             />
             {errors.title && (
-              <p className="text-red-500 text-sm">{errors.title.message}</p>
+              <span className="text-red-500">Title is required</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Image URL</label>
             <input
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
-              {...register("image", {
-                required: "Image URL is required",
-                pattern: {
-                  value: /^https?:\/\//,
-                  message: "Image must start with http/https",
-                },
-              })}
+              placeholder="Image URL"
+              {...register("image", { required: true })}
             />
             {errors.image && (
-              <p className="text-red-500 text-sm">{errors.image.message}</p>
+              <span className="text-red-500">Image is required</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Genre</label>
             <input
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="text"
-              {...register("genre", { required: "Genre is required" })}
+              placeholder="Genre"
+              {...register("genre", { required: true })}
             />
             {errors.genre && (
-              <p className="text-red-500 text-sm">{errors.genre.message}</p>
+              <span className="text-red-500">Genre is required</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Description</label>
             <textarea
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-              {...register("description", {
-                required: "Description is required",
-              })}
+              placeholder="Description"
+              {...register("description", { required: true })}
             />
             {errors.description && (
-              <p className="text-red-500 text-sm">
-                {errors.description.message}
-              </p>
+              <span className="text-red-500">Description is required</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Released Date</label>
             <input
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-              type="date"
-              {...register("released", {
-                required: "Release date is required",
-              })}
+              type="text"
+              placeholder="Release Date (YYYY-MM-DD)"
+              {...register("released", { required: true })}
             />
             {errors.released && (
-              <p className="text-red-500 text-sm">{errors.released.message}</p>
+              <span className="text-red-500">Release date is required</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Rating</label>
             <input
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="number"
-              {...register("rating", {
-                required: "Rating is required",
-                min: {
-                  value: 0,
-                  message: "Rating cannot be less than 0",
-                },
-                max: {
-                  value: 5,
-                  message: "Rating cannot be greater than 5",
-                },
-              })}
+              placeholder="Rating (0-5)"
+              min={0}
+              max={5}
+              step={0.1}
+              {...register("rating", { required: true, min: 0, max: 5 })}
             />
             {errors.rating && (
-              <p className="text-red-500 text-sm">{errors.rating.message}</p>
+              <span className="text-red-500">Rating is required (0-5)</span>
             )}
           </div>
-
           <div className="mb-4">
-            <label className="block font-medium">Playtime (in hours)</label>
             <input
               className="border w-full p-2 dark:bg-gray-700 dark:text-white dark:border-gray-600"
               type="number"
-              {...register("playtime", {
-                required: "Playtime is required",
-                min: {
-                  value: 1,
-                  message: "Playtime must be at least 1 hour",
-                },
-              })}
+              placeholder="Playtime (hours)"
+              min={0}
+              max={300}
+              step={1}
+              {...register("playtime", { required: true, min: 0 })}
             />
             {errors.playtime && (
-              <p className="text-red-500 text-sm">{errors.playtime.message}</p>
+              <span className="text-red-500">Playtime is required</span>
             )}
           </div>
-
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition dark:bg-blue-800 dark:hover:bg-blue-600"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition dark:bg-blue-700 dark:hover:bg-blue-600"
           >
             Add Game
           </button>

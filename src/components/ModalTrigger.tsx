@@ -12,12 +12,9 @@ export default function ModalTrigger({
 }: ModalTriggerProps) {
   const [open, setOpen] = useState(false);
 
-  console.log("ModalTrigger rendered. open:", open);
-
   const childWithProps = isValidElement(children)
     ? cloneElement(children, {
         onClick: () => {
-          console.log("ModalTrigger button clicked, opening modal");
           setOpen(true);
         },
       })
@@ -29,7 +26,6 @@ export default function ModalTrigger({
       {open && (
         <Modal
           onClose={() => {
-            console.log("Modal onClose called, closing modal");
             setOpen(false);
           }}
         >

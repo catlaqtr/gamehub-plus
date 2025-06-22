@@ -12,8 +12,6 @@ function Layout() {
           ➕ Add New Game
         </Link>
 
-        <Link to={"game/1"}>Game</Link>
-
         {/* Toggle Dark Mode */}
         <button
           onClick={() => {
