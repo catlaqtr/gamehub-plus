@@ -85,7 +85,7 @@ function HomePage() {
   }, []);
 
   return (
-    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-900 dark:text-white">
+    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen w-full bg-gray-100 dark:bg-gray-900 dark:text-white">
       {showSuccess && (
         <div className="mb-4 p-2 bg-green-100 text-green-800 rounded dark:bg-green-800 dark:text-green-100 text-center">
           Game added successfully!

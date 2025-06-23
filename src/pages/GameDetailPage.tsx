@@ -1,6 +1,7 @@
-import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useGameContext } from "../context/GameContext";
+import { useEffect, useState } from "react";
 import type { Game } from "../context/GameContext";
 
 function GameDetailPage() {

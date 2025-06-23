@@ -2,8 +2,8 @@ import { Link, Outlet } from "react-router-dom";
 
 function Layout() {
   return (
-    <div>
-      <nav className="bg-gray-800 text-white flex items-center justify-between p-4 gap-4 text-lg font-bold dark:bg-gray-900 dark:text-gray-300">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white">
+      <nav className="bg-gray-800 text-white flex items-center justify-between p-4 gap-4 text-lg font-bold dark:bg-gray-900 dark:text-gray-300 shadow-md">
         <Link to={"/"}>GameHub+</Link>
         <Link
           to="/add"
@@ -28,7 +28,7 @@ function Layout() {
         </button>
       </nav>
 
-      <main className="p-4 max-w-6xl mx-auto">
+      <main className="p-4 max-w-6xl mx-auto bg-gray-100 dark:bg-gray-900 min-h-[calc(100vh-64px)]">
         <Outlet />
       </main>
     </div>
