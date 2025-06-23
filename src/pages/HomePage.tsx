@@ -54,8 +54,9 @@ function HomePage() {
 
   useEffect(() => {
     if (success) {
-      setShowSuccess(true);
-      const timeout = setTimeout(() => setShowSuccess(false), 2000);
+      const timeout = setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
       return () => clearTimeout(timeout);
     }
   }, [success]);
@@ -79,21 +80,20 @@ function HomePage() {
     [setSearchParams]
   );
 
-  const handleViewDescription = useCallback((description?: string) => {
-    setModalContent(<p>{description || "No description available."}</p>);
+  const handleViewDescription = useCallback((description: string) => {
+    setModalContent(<p>{description}</p>);
     setIsModalOpen(true);
   }, []);
 
   return (
-    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen w-full bg-gray-100 dark:bg-gray-900 dark:text-white">
+    <section className="pt-6 pb-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-900 dark:text-white">
+      <div>Home Page</div>
       {showSuccess && (
-        <div className="mb-4 p-2 bg-green-100 text-green-800 rounded dark:bg-green-800 dark:text-green-100 text-center">
+        <p className="text-green-600 font-semibold mb-4 dark:text-green-400">
           Game added successfully!
-        </div>
+        </p>
       )}
-      <label className="block mb-2 font-semibold">
-        Max Playtime: {filterState.playtime} hrs
-      </label>
+
       <input
         type="range"
         min={0}
@@ -101,8 +101,16 @@ function HomePage() {
         step={10}
         value={filterState.playtime}
         onChange={handlePlaytimeChange}
-        className="dark:bg-gray-700 dark:focus:ring-blue-500 w-full mb-6"
+        className="dark:bg-gray-700 dark:focus:ring-blue-500"
       />
+
+      <p className="mb-2 font-medium dark:text-gray-200">
+        Showing games under {filterState.playtime} hours of playtime
+      </p>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        You've adjusted the filter {playTimeChangeCount.current} times
+      </p>
+
       {isLoading ? (
         <Spinner />
       ) : (
@@ -110,16 +118,13 @@ function HomePage() {
           {filteredGames.map((game) => (
             <GameCard
               key={game.id}
-              title={game.title}
-              genre={game.genre}
-              image={game.image}
-              id={game.id}
-              description={game.description}
+              {...game}
               onViewDescription={() => handleViewDescription(game.description)}
             />
           ))}
         </div>
       )}
+
       {isModalOpen && modalContent && (
         <Modal onClose={() => setIsModalOpen(false)} title="Game Description">
           {modalContent}
